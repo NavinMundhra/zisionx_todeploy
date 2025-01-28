@@ -1,0 +1,25 @@
+{
+    "rewrites": [
+        {
+            "source": "/api/upload",
+            "destination": "http://13.201.211.85/api/upload"
+        },
+        {
+            "source": "/api/search",
+            "destination": "http://13.201.211.85/api/search"
+        },
+        {
+            "source": "/api/send-otp",
+            "destination": "http://13.201.211.85/api/send-otp"
+        },
+        {
+            "source": "/api/validate-otp",
+            "destination": "http://13.201.211.85/api/validate-otp"
+        },
+        {
+            "source": "/api/print-it",
+            "destination": "http://13.201.211.85/api/print-it"
+        }
+        
+    ]
+}
