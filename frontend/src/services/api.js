@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://13.201.211.85"; // Correct backend base URL
+const BASE_URL = "https://api.zisionx.com"; // Correct backend base URL
 
 const axiosInstance = axios.create({
     baseURL: BASE_URL, // Ensure this matches your backend URL
