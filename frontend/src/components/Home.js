@@ -115,7 +115,7 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
     const handlePrintImage = async () => {
         if (currentImage) {
             try {
-                const response = await axios.post("http://13.201.211.85/api/print-it", {
+                const response = await axios.post("https://api.zisionx.com/api/print-it", {
                     phone_number: phoneNumber, // Pass the user's phone number
                     event_code: eventCode, // Pass the event code
                     image_name: currentImage.image_name, // Pass the image name
