@@ -232,39 +232,27 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
                 )}
             </Box>
 
-            {/* Image Viewer Dialog */}
-            <Dialog open={!!currentImage} onClose={handleCloseViewer} fullWidth maxWidth="md">
-                <DialogActions>
-                    <IconButton onClick={handleCloseViewer} sx={{ position: "absolute", top: 10, right: 10 }}>
-                        <CloseIcon />
-                    </IconButton>
-                </DialogActions>
-                <DialogContent sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                        <IconButton onClick={handlePreviousImage}>
-                            <ArrowBackIosIcon />
-                        </IconButton>
-                        <img src={currentImage?.presigned_url} alt="" style={{ maxWidth: "80%", maxHeight: "80vh" }} />
-                        <IconButton onClick={handleNextImage}>
-                            <ArrowForwardIosIcon />
-                        </IconButton>
-                    </Box>
+            {/* Bottom Buttons */}
+            <Box sx={{ position: "fixed", bottom: "20px", display: "flex", gap: "20px" }}>
+                <Fab color="primary" component="label">
+                    <AddAPhotoIcon />
+                    <input type="file" accept="image/*" hidden capture="user" onChange={handleUploadClick} />
+                </Fab>
 
-                    {/* Download Button */}
-                    <Button
-                        variant="contained"
-                        sx={{ marginTop: 2, backgroundColor: "#20424D" }}
-                        onClick={handleDownloadImage}
-                    >
-                        <DownloadIcon /> Download
-                    </Button>
+                <Button variant="contained" component="label">
+                    <CloudUploadIcon /> Re-upload Selfie
+                    <input type="file" accept="image/*" hidden capture="user" onChange={handleReuploadClick} />
+                </Button>
+            </Box>
 
-                    {/* Print Button */}
-                    <Button variant="contained" sx={{ marginTop: 2, backgroundColor: "#20424D" }} onClick={handlePrintImage}>
-                        Get it Printed
-                    </Button>
-                </DialogContent>
-            </Dialog>
+            {/* Sidebar */}
+            <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
+                <List>
+                    <ListItem button onClick={onLogout}>
+                        <ListItemText primary="Logout" />
+                    </ListItem>
+                </List>
+            </Drawer>
         </Box>
     );
 };
