@@ -9,7 +9,7 @@ import { searchImage, uploadImage } from "./services/api";
 import ReactGA from "react-ga4";
 
 // 🔹 Replace with your Google Analytics 4 Measurement ID
-const GA_MEASUREMENT_ID = "G-XXXXXXXXXX";
+const GA_MEASUREMENT_ID = "G-QSGSDM0N8M";
 ReactGA.initialize(GA_MEASUREMENT_ID);
 
 function App() {
