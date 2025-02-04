@@ -3,28 +3,16 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-
+import { injectContentsquareScript } from '@contentsquare/tag-sdk';
 import ReactGA from "react-ga4";
-import { hotjar } from "react-hotjar";
-import clarity from "clarity-js"; // Correct import for Clarity
 
-// 🔹 Replace with your actual IDs
-const GA_MEASUREMENT_ID = "G-QSGSDM0N8M";  // Google Analytics 4 Measurement ID
-const HOTJAR_ID = 5291436;                // Hotjar Site ID (as a number, not a string)
-const HOTJAR_SV = 6;                       // Hotjar Script Version
-// const CLARITY_ID = "q4k7n0x2l8";           // Microsoft Clarity Project ID
+const GA_MEASUREMENT_ID = "G-QSGSDM0N8M";
 
 // Initialize Google Analytics 4
 ReactGA.initialize(GA_MEASUREMENT_ID);
 ReactGA.send("pageview"); // Send initial pageview
 
-// Initialize Hotjar
-hotjar.initialize(HOTJAR_ID, HOTJAR_SV);
-
-// Initialize Microsoft Clarity (Fixed)
-// clarity.init({ projectId: CLARITY_ID });
-
-// ✅ Inject Google Analytics manually as a fallback
+// Inject Google Analytics manually as a fallback
 const injectGoogleAnalytics = () => {
   const script = document.createElement("script");
   script.async = true;
@@ -41,15 +29,24 @@ const injectGoogleAnalytics = () => {
 
 injectGoogleAnalytics();
 
-// ✅ Handle PWA Install Prompt
+
+injectContentsquareScript({
+  siteId: "5291436",
+  async: true, // Optional: Set to false to wait for script execution until after document parsing.
+  defer: false // Optional: Set to true to defer script execution after document parsing.
+});
+
+
+
+// Function to handle PWA install prompt
 const handlePWAInstall = () => {
   let deferredPrompt;
 
-  window.addEventListener("beforeinstallprompt", (event) => {
+  window.addEventListener('beforeinstallprompt', (event) => {
     event.preventDefault(); // Prevent automatic prompt
     deferredPrompt = event;
 
-    // Show Install Button
+    // Show a floating "Install App" button
     const installButton = document.createElement("button");
     installButton.innerText = "Install ZisionX App";
     installButton.style.position = "fixed";
@@ -67,7 +64,11 @@ const handlePWAInstall = () => {
     installButton.addEventListener("click", () => {
       deferredPrompt.prompt(); // Show install popup
       deferredPrompt.userChoice.then((choice) => {
-        console.log(choice.outcome === "accepted" ? "User installed PWA" : "User dismissed install prompt");
+        if (choice.outcome === "accepted") {
+          console.log("User installed PWA");
+        } else {
+          console.log("User dismissed install prompt");
+        }
         installButton.remove();
       });
     });
@@ -76,21 +77,23 @@ const handlePWAInstall = () => {
   });
 };
 
-// ✅ Call function to check PWA install prompt
+// Call function to check PWA install prompt
 handlePWAInstall();
 
-// ✅ Register Service Worker for PWA
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker
-      .register("/service-worker.js")
-      .then((registration) => console.log("ServiceWorker registered:", registration))
-      .catch((error) => console.log("ServiceWorker registration failed:", error));
+// Register Service Worker for PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then((registration) => {
+        console.log('ServiceWorker registered:', registration);
+      })
+      .catch((error) => {
+        console.log('ServiceWorker registration failed:', error);
+      });
   });
 }
 
-// ✅ Render App
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <App />

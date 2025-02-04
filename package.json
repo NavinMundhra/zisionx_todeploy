@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@contentsquare/tag-sdk": "^1.1.0",
     "@microsoft/clarity": "^1.0.0",
     "clarity-js": "^0.7.66",
     "react-ga4": "^2.1.0",
