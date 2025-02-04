@@ -198,39 +198,10 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
                 >
                     Images of you
                 </Typography>
-            </Box>
-
-            {/* Top Action Bar */}
-            <Box
-                sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    width: "100%",
-                    padding: "10px 20px",
-                }}
-            >
                 {/* Refresh Icon */}
                 <IconButton onClick={handleRefresh} sx={{ color: "#20424D" }}>
                     <RefreshIcon fontSize="large" />
                 </IconButton>
-
-                {/* Download Images Button */}
-                {selectedImages.length > 0 && (
-                    <Button
-                        variant="contained"
-                        sx={{
-                            fontWeight: 600,
-                            backgroundColor: "#20424D",
-                            color: "#fff",
-                            "&:hover": {
-                                backgroundColor: "#162d33",
-                            },
-                        }}
-                        onClick={handleDownloadSelected}
-                    >
-                        Download Selected
-                    </Button>
-                )}
             </Box>
 
             {/* User Images */}
@@ -262,21 +233,6 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
                                     }}
                                     onClick={() => handleImageClick(index)}
                                 >
-                                    <Checkbox
-                                        sx={{
-                                            position: "absolute",
-                                            top: "1px",
-                                            left: "1px",
-                                            backgroundColor: "#fff",
-                                            borderRadius: "50%",
-                                            transform: "scale(0.5)",
-                                        }}
-                                        checked={selectedImages.includes(image)}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleImageSelect(image);
-                                        }}
-                                    />
                                     <img
                                         src={image.presigned_url}
                                         alt=""
@@ -293,25 +249,6 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
                     </Grid>
                 )}
             </Box>
-
-            {/* Download Selected Button
-            {selectedImages.length > 0 && (
-                <Button
-                    variant="contained"
-                    sx={{
-                        marginBottom: 3,
-                        fontWeight: 600,
-                        backgroundColor: "#20424D",
-                        color: "#fff",
-                        "&:hover": {
-                            backgroundColor: "#162d33",
-                        },
-                    }}
-                    onClick={handleDownloadSelected}
-                >
-                    Download Selected
-                </Button>
-            )} */}
 
             {/* Bottom Buttons */}
             <Box
@@ -438,43 +375,28 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
                         <CloseIcon />
                     </IconButton>
                 </DialogActions>
-                <DialogContent
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        padding: "20px",
-                    }}
-                >
+                <DialogContent sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                         <IconButton onClick={handlePreviousImage}>
                             <ArrowBackIosIcon />
                         </IconButton>
-                        <img
-                            src={currentImage?.presigned_url}
-                            alt=""
-                            style={{
-                                maxWidth: "80%",
-                                maxHeight: "80vh",
-                                objectFit: "contain",
-                            }}
-                        />
+                        <img src={currentImage?.presigned_url} alt="" style={{ maxWidth: "80%", maxHeight: "80vh" }} />
                         <IconButton onClick={handleNextImage}>
                             <ArrowForwardIosIcon />
                         </IconButton>
                     </Box>
+
+                    {/* Download Button */}
                     <Button
                         variant="contained"
-                        sx={{
-                            marginTop: 2,
-                            backgroundColor: "#20424D",
-                            "&:hover": {
-                                backgroundColor: "#162d33",
-                            },
-                        }}
-                        onClick={handlePrintImage}
+                        sx={{ marginTop: 2, backgroundColor: "#20424D" }}
+                        onClick={handleDownloadImage}
                     >
+                        <DownloadIcon /> Download
+                    </Button>
+
+                    {/* Print Button */}
+                    <Button variant="contained" sx={{ marginTop: 2, backgroundColor: "#20424D" }} onClick={handlePrintImage}>
                         Get it Printed
                     </Button>
                 </DialogContent>
