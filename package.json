@@ -4,6 +4,7 @@
     "@microsoft/clarity": "^1.0.0",
     "clarity-js": "^0.7.66",
     "react-ga4": "^2.1.0",
-    "react-hotjar": "^6.3.1"
+    "react-hotjar": "^6.3.1",
+    "uuid": "^11.0.5"
   }
 }

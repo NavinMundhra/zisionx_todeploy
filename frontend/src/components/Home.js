@@ -27,6 +27,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { searchImage } from "../services/api";
 import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
 
 const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber, eventCode, selfie }) => {
     const [images, setImages] = useState([]);
@@ -47,13 +48,17 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
     const handleUploadClick = (e) => {
         const file = e.target.files[0];
         if (file) {
+            const uniqueFileName = `${uuidv4()}-${file.name}`;
+
+            const uniqueFile = new File([file], uniqueFileName, { type: file.type });
+
             setIsUploading(true);
             setUploadComplete(false);
             setTimeout(() => {
-                onUpload(file);
+                onUpload(uniqueFile);
                 setIsUploading(false);
                 setUploadComplete(true);
-            }, 2000); // Simulate upload delay
+            }, 1000); // Simulate upload delay
         }
     };
 
