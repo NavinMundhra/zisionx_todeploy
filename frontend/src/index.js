@@ -12,6 +12,22 @@ const GA_MEASUREMENT_ID = "G-QSGSDM0N8M";
 ReactGA.initialize(GA_MEASUREMENT_ID);
 ReactGA.send("pageview"); // Send initial pageview
 
+// ✅ Inject Google Analytics manually as a fallback
+const injectGoogleAnalytics = () => {
+  const script = document.createElement("script");
+  script.async = true;
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+  document.head.appendChild(script);
+
+  window.dataLayer = window.dataLayer || [];
+  function gtag(...args) {
+    window.dataLayer.push(args);
+  }
+  gtag("js", new Date());
+  gtag("config", GA_MEASUREMENT_ID);
+};
+
+injectGoogleAnalytics();
 
 injectContentsquareScript({
   siteId: "5291436",
