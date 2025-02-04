@@ -22,7 +22,7 @@ ReactGA.send("pageview"); // Send initial pageview
 hotjar.initialize(HOTJAR_ID, HOTJAR_SV);
 
 // Initialize Microsoft Clarity
-clarity.init(CLARITY_ID);
+clarity.start(CLARITY_ID);
 
 // Inject Google Analytics Manually (Failsafe)
 const injectGoogleAnalytics = () => {
