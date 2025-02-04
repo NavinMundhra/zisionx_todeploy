@@ -10,16 +10,16 @@ import {
     ListItemText,
     IconButton,
     Button,
-    Checkbox,
     Dialog,
     DialogContent,
     DialogActions,
     CircularProgress,
 } from "@mui/material";
-import RefreshIcon from "@mui/icons-material/Refresh"; // Added refresh icon
+import RefreshIcon from "@mui/icons-material/Refresh";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import DownloadIcon from "@mui/icons-material/Download";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -29,7 +29,6 @@ import axios from "axios";
 const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber, eventCode }) => {
     const [images, setImages] = useState([]);
     const [drawerOpen, setDrawerOpen] = useState(false);
-    const [selectedImages, setSelectedImages] = useState([]);
     const [currentImage, setCurrentImage] = useState(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isUploading, setIsUploading] = useState(false);
@@ -37,7 +36,6 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
     const [isReuploading, setIsReuploading] = useState(false);
     const [reuploadComplete, setReuploadComplete] = useState(false);
 
-    // Update images when `initialImages` changes
     useEffect(() => {
         setImages(initialImages);
     }, [initialImages]);
@@ -51,7 +49,7 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
                 onUpload(file);
                 setIsUploading(false);
                 setUploadComplete(true);
-            }, 2000); // Simulate upload delay
+            }, 2000);
         }
     };
 
@@ -64,37 +62,16 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
                 onReupload(file);
                 setIsReuploading(false);
                 setReuploadComplete(true);
-            }, 2000); // Simulate reupload delay
+            }, 2000);
         }
     };
 
-    // Reset Images to Initial State
     const handleRefresh = () => {
         setImages(initialImages);
     };
 
     const toggleDrawer = (open) => () => {
         setDrawerOpen(open);
-    };
-
-    const handleImageSelect = (image) => {
-        setSelectedImages((prev) =>
-            prev.includes(image)
-                ? prev.filter((img) => img !== image)
-                : [...prev, image]
-        );
-    };
-
-    const handleDownloadSelected = () => {
-        selectedImages.forEach((image) => {
-            const link = document.createElement("a");
-            link.href = image.presigned_url;
-            link.download = image.image_name;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        });
-        setSelectedImages([]);
     };
 
     const handleImageClick = (index) => {
@@ -118,13 +95,24 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
         setCurrentImage(images[prevIndex]);
     };
 
+    const handleDownloadImage = () => {
+        if (currentImage) {
+            const link = document.createElement("a");
+            link.href = currentImage.presigned_url;
+            link.download = currentImage.image_name;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    };
+
     const handlePrintImage = async () => {
         if (currentImage) {
             try {
-                const response = await axios.post("https://api.zisionx.com/api/print-it", {
-                    phone_number: phoneNumber, // Pass the user's phone number
-                    event_code: eventCode, // Pass the event code
-                    image_name: currentImage.image_name, // Pass the image name
+                await axios.post("https://api.zisionx.com/api/print-it", {
+                    phone_number: phoneNumber,
+                    event_code: eventCode,
+                    image_name: currentImage.image_name,
                 });
                 alert("Print request successful!");
             } catch (error) {
@@ -176,13 +164,15 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
                 ZisionX
             </Typography>
 
-            {/* Subtitle */}
+            {/* Images of You Section */}
             <Box
                 sx={{
                     width: "100%",
-                    textAlign: "center",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
                     backgroundColor: "#F4F4F4",
-                    padding: "10px 0",
+                    padding: "10px 20px",
                     position: "sticky",
                     top: "80px",
                     zIndex: 10,
@@ -198,43 +188,15 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
                 >
                     Images of you
                 </Typography>
-            </Box>
 
-            {/* Top Action Bar */}
-            <Box
-                sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    width: "100%",
-                    padding: "10px 20px",
-                }}
-            >
                 {/* Refresh Icon */}
                 <IconButton onClick={handleRefresh} sx={{ color: "#20424D" }}>
                     <RefreshIcon fontSize="large" />
                 </IconButton>
-
-                {/* Download Images Button */}
-                {selectedImages.length > 0 && (
-                    <Button
-                        variant="contained"
-                        sx={{
-                            fontWeight: 600,
-                            backgroundColor: "#20424D",
-                            color: "#fff",
-                            "&:hover": {
-                                backgroundColor: "#162d33",
-                            },
-                        }}
-                        onClick={handleDownloadSelected}
-                    >
-                        Download Selected
-                    </Button>
-                )}
             </Box>
 
             {/* User Images */}
-            <Box sx={{ marginTop: "80px", overflowY: "auto", width: "100%", padding: "0 20px" }}>
+            <Box sx={{ marginTop: "10px", overflowY: "auto", width: "100%", padding: "0 20px" }}>
                 {images.length === 0 ? (
                     <Typography variant="body1" sx={{ marginBottom: 2 }}>
                         No images found.
@@ -242,14 +204,7 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
                 ) : (
                     <Grid container spacing={2} sx={{ marginBottom: 5 }}>
                         {images.map((image, index) => (
-                            <Grid
-                                item
-                                xs={6}
-                                key={index}
-                                sx={{
-                                    animation: "fadeIn 0.8s ease-in-out",
-                                }}
-                            >
+                            <Grid item xs={6} key={index}>
                                 <Box
                                     sx={{
                                         position: "relative",
@@ -257,26 +212,9 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
                                         overflow: "hidden",
                                         boxShadow: "0px 9px 11px rgba(0, 0, 0, 0.07)",
                                         border: "1px solid #ddd",
-                                        padding: 0,
-                                        margin: 0,
                                     }}
                                     onClick={() => handleImageClick(index)}
                                 >
-                                    <Checkbox
-                                        sx={{
-                                            position: "absolute",
-                                            top: "1px",
-                                            left: "1px",
-                                            backgroundColor: "#fff",
-                                            borderRadius: "50%",
-                                            transform: "scale(0.5)",
-                                        }}
-                                        checked={selectedImages.includes(image)}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleImageSelect(image);
-                                        }}
-                                    />
                                     <img
                                         src={image.presigned_url}
                                         alt=""
@@ -294,143 +232,6 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
                 )}
             </Box>
 
-            {/* Download Selected Button
-            {selectedImages.length > 0 && (
-                <Button
-                    variant="contained"
-                    sx={{
-                        marginBottom: 3,
-                        fontWeight: 600,
-                        backgroundColor: "#20424D",
-                        color: "#fff",
-                        "&:hover": {
-                            backgroundColor: "#162d33",
-                        },
-                    }}
-                    onClick={handleDownloadSelected}
-                >
-                    Download Selected
-                </Button>
-            )} */}
-
-            {/* Bottom Buttons */}
-            <Box
-                sx={{
-                    position: "fixed",
-                    bottom: "20px",
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "20px",
-                }}
-            >
-                {/* Camera Button */}
-                <Fab
-                    color="primary"
-                    aria-label="upload"
-                    sx={{
-                        boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
-                        backgroundColor: "#20424D",
-                        "&:hover": {
-                            backgroundColor: "#162d33",
-                        },
-                    }}
-                    component="label"
-                >
-                    {isUploading ? (
-                        uploadComplete ? (
-                            <CheckCircleIcon sx={{ color: "#fff", fontSize: "24px" }} />
-                        ) : (
-                            <CircularProgress size={24} sx={{ color: "#fff" }} />
-                        )
-                    ) : (
-                        <AddAPhotoIcon sx={{ color: "#fff" }} />
-                    )}
-                    <input type="file" accept="image/*" hidden capture="user" onChange={handleUploadClick} />
-                </Fab>
-
-                {/* Reupload Selfie Button (Opens Camera Directly) */}
-                <Button
-                    variant="contained"
-                    component="label"
-                    sx={{
-                        fontWeight: 700,
-                        backgroundColor: "#20424D",
-                        color: "#fff",
-                        borderRadius: "10px",
-                        padding: "10px 20px",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px",
-                        "&:hover": {
-                            backgroundColor: "#162d33",
-                        },
-                    }}
-                >
-                    {isReuploading ? (
-                        reuploadComplete ? (
-                            <CheckCircleIcon sx={{ color: "#fff", fontSize: "24px" }} />
-                        ) : (
-                            <CircularProgress size={24} sx={{ color: "#fff" }} />
-                        )
-                    ) : (
-                        <>
-                            <CloudUploadIcon sx={{ color: "#fff", fontSize: "20px" }} />
-                            Re-upload Selfie
-                        </>
-                    )}
-                    <input type="file" accept="image/*" hidden capture="user" onChange={handleReuploadClick} />
-                </Button>
-            </Box>
-
-            {/* Side Drawer */}
-            <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
-                <Box
-                    sx={{
-                        width: 250,
-                        padding: 2,
-                    }}
-                >
-                    <Typography
-                        variant="h6"
-                        sx={{
-                            fontWeight: 700,
-                            fontSize: "40px",
-                            fontFamily: "Oranienbaum, serif",
-                            marginBottom: 2,
-                            textAlign: "center",
-                        }}
-                    >
-                        ZisionX
-                    </Typography>
-                    <List>
-                        <ListItem>
-                            <label htmlFor="reupload-selfie">
-                                <ListItemText
-                                    primary="Reupload Selfie"
-                                    sx={{ fontWeight: "bold", cursor: "pointer" }}
-                                />
-                                <input
-                                    id="reupload-selfie"
-                                    type="file"
-                                    accept="image/*"
-                                    hidden
-                                    onChange={handleReuploadClick}
-                                />
-                            </label>
-                        </ListItem>
-                        <hr />
-                        <ListItem button onClick={onLogout}>
-                            <ListItemText
-                                primary="Logout"
-                                sx={{ fontWeight: "bold", cursor: "pointer" }}
-                            />
-                        </ListItem>
-                    </List>
-                </Box>
-            </Drawer>
-
             {/* Image Viewer Dialog */}
             <Dialog open={!!currentImage} onClose={handleCloseViewer} fullWidth maxWidth="md">
                 <DialogActions>
@@ -438,43 +239,28 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
                         <CloseIcon />
                     </IconButton>
                 </DialogActions>
-                <DialogContent
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        padding: "20px",
-                    }}
-                >
+                <DialogContent sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                         <IconButton onClick={handlePreviousImage}>
                             <ArrowBackIosIcon />
                         </IconButton>
-                        <img
-                            src={currentImage?.presigned_url}
-                            alt=""
-                            style={{
-                                maxWidth: "80%",
-                                maxHeight: "80vh",
-                                objectFit: "contain",
-                            }}
-                        />
+                        <img src={currentImage?.presigned_url} alt="" style={{ maxWidth: "80%", maxHeight: "80vh" }} />
                         <IconButton onClick={handleNextImage}>
                             <ArrowForwardIosIcon />
                         </IconButton>
                     </Box>
+
+                    {/* Download Button */}
                     <Button
                         variant="contained"
-                        sx={{
-                            marginTop: 2,
-                            backgroundColor: "#20424D",
-                            "&:hover": {
-                                backgroundColor: "#162d33",
-                            },
-                        }}
-                        onClick={handlePrintImage}
+                        sx={{ marginTop: 2, backgroundColor: "#20424D" }}
+                        onClick={handleDownloadImage}
                     >
+                        <DownloadIcon /> Download
+                    </Button>
+
+                    {/* Print Button */}
+                    <Button variant="contained" sx={{ marginTop: 2, backgroundColor: "#20424D" }} onClick={handlePrintImage}>
                         Get it Printed
                     </Button>
                 </DialogContent>
