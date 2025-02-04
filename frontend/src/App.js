@@ -11,6 +11,7 @@ function App() {
     const [currentScreen, setCurrentScreen] = useState("login"); // Manage current screen
     const [userDetails, setUserDetails] = useState(null); // Store user details (phone, selfie, etc.)
     const [images, setImages] = useState([]); // Store matched images
+    const [selfie, setSelfie] = useState(null); 
 
     // Handler for when OTP is sent
     const handleOTPSent = (details) => {
@@ -19,8 +20,9 @@ function App() {
     };
 
     // Handler for when OTP is verified
-    const handleOTPVerified = (matchedImages) => {
+    const handleOTPVerified = (matchedImages, uploadedSelfie) => {
         setImages(matchedImages); // Save matched images
+        setSelfie(uploadedSelfie);
         setCurrentScreen("home"); // Switch to Home screen
     };
 
@@ -83,6 +85,7 @@ function App() {
                     phoneNumber={userDetails.phoneNumber} // Pass phone number
                     eventCode={userDetails.eventCode}
                     initialImages={images} // Pass matched images
+                    selfie={selfie} // Pass selfie to Home.js
                     onReupload={handleReupload} // Pass reupload handler
                     onUpload={handleUpload} // Pass upload handler
                 />

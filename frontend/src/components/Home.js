@@ -35,6 +35,7 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
     const [uploadComplete, setUploadComplete] = useState(false);
     const [isReuploading, setIsReuploading] = useState(false);
     const [reuploadComplete, setReuploadComplete] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); 
 
     // Update images when `initialImages` changes
     useEffect(() => {
@@ -78,9 +79,27 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
         }
     };
 
-    // Reset Images to Initial State
-    const handleRefresh = () => {
-        setImages(initialImages);
+    const handleRefresh = async () => {
+        if (!selfie) {
+            alert("No selfie found. Please upload a selfie first.");
+            return;
+        }
+    
+        try {
+            setIsLoading(true); // Indicate loading state
+    
+            // Re-trigger the search API with the initial selfie
+            const searchResponse = await searchImage(selfie);
+            const matches = searchResponse.data.matches || [];
+    
+            // Update images on the home page
+            setImages(matches);
+        } catch (error) {
+            console.error("Failed to refresh images:", error);
+            alert("Failed to refresh images. Please try again.");
+        }
+    
+        setIsLoading(false); // Stop loading state
     };
 
     const toggleDrawer = (open) => () => {
@@ -166,18 +185,20 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
                 ZisionX
             </Typography>
 
-            {/* Subtitle */}
+            {/* Subtitle with Centered Text and Right-Aligned Refresh Icon */}
             <Box
                 sx={{
                     width: "100%",
                     display: "flex",
-                    textAlign: "center",
+                    alignItems: "center",
+                    justifyContent: "center", // Centers the text horizontally
                     backgroundColor: "#F4F4F4",
-                    justifyContent: "space-between", // Ensures text on left and refresh icon on right
-                    padding: "10px 0",
+                    padding: "10px 20px",
                     position: "sticky",
                     top: "80px",
                     zIndex: 10,
+                    textAlign: "center", // Ensures the text stays centered
+                    position: "relative", // Allows absolute positioning of the refresh icon
                 }}
             >
                 <Typography
@@ -186,12 +207,21 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
                         fontWeight: 700,
                         fontSize: "18px",
                         color: "#333",
+                        textAlign: "center",
                     }}
                 >
                     Images of you
                 </Typography>
-                {/* Refresh Icon */}
-                <IconButton onClick={handleRefresh} sx={{ color: "#20424D" }}>
+
+                {/* Refresh Icon - Right Aligned */}
+                <IconButton 
+                    onClick={handleRefresh} 
+                    sx={{ 
+                        color: "#20424D",
+                        position: "absolute", // Keeps it positioned within the box
+                        right: "20px", // Aligns it to the right side of the box
+                    }}
+                >
                     <RefreshIcon fontSize="large" />
                 </IconButton>
             </Box>

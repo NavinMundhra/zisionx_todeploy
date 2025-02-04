@@ -41,7 +41,7 @@ const OTPVerification = ({ phoneNumber, selfie, onVerify }) => {
             const matches = searchResponse.data.matches || [];
 
             alert("OTP validated successfully!");
-            onVerify(matches); // Pass the matched images to the Home screen
+            onVerify(matches, selfie); // Pass the matched images to the Home screen
         } catch (error) {
             console.error("Failed to validate OTP or fetch images:", error);
             alert("Invalid OTP or failed to fetch images. Please try again.");
