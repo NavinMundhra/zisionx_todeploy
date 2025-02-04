@@ -161,7 +161,7 @@ def search_face():
             search_response = REKOGNITION.search_faces_by_image(
                 CollectionId=COLLECTION_ID,
                 Image={"Bytes": image_file.read()},
-                MaxFaces=5,
+                MaxFaces=50,
                 FaceMatchThreshold=95
             )
 

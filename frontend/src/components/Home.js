@@ -16,6 +16,7 @@ import {
     DialogActions,
     CircularProgress,
 } from "@mui/material";
+import RefreshIcon from "@mui/icons-material/Refresh"; // Added refresh icon
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
@@ -65,6 +66,11 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
                 setReuploadComplete(true);
             }, 2000); // Simulate reupload delay
         }
+    };
+
+    // Reset Images to Initial State
+    const handleRefresh = () => {
+        setImages(initialImages);
     };
 
     const toggleDrawer = (open) => () => {
@@ -141,6 +147,39 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
                 position: "relative",
             }}
         >
+            {/* Top Action Bar */}
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    width: "100%",
+                    padding: "10px 20px",
+                }}
+            >
+                {/* Refresh Icon */}
+                <IconButton onClick={handleRefresh} sx={{ color: "#20424D" }}>
+                    <RefreshIcon fontSize="large" />
+                </IconButton>
+
+                {/* Download Images Button */}
+                {selectedImages.length > 0 && (
+                    <Button
+                        variant="contained"
+                        sx={{
+                            fontWeight: 600,
+                            backgroundColor: "#20424D",
+                            color: "#fff",
+                            "&:hover": {
+                                backgroundColor: "#162d33",
+                            },
+                        }}
+                        onClick={handleDownloadSelected}
+                    >
+                        Download Selected
+                    </Button>
+                )}
+            </Box>
+
             {/* Hamburger Menu Icon */}
             <IconButton
                 sx={{
@@ -255,7 +294,7 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
                 )}
             </Box>
 
-            {/* Download Selected Button */}
+            {/* Download Selected Button
             {selectedImages.length > 0 && (
                 <Button
                     variant="contained"
@@ -272,7 +311,7 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
                 >
                     Download Selected
                 </Button>
-            )}
+            )} */}
 
             {/* Bottom Buttons */}
             <Box
@@ -311,38 +350,38 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
                     <input type="file" accept="image/*" hidden capture="user" onChange={handleUploadClick} />
                 </Fab>
 
-                {/* Reupload Selfie Button */}
-<Button
-    variant="contained"
-    component="label"
-    sx={{
-        fontWeight: 700,
-        backgroundColor: "#20424D",
-        color: "#fff",
-        borderRadius: "10px",
-        padding: "10px 20px",
-        display: "flex",
-        alignItems: "center",
-        gap: "8px",
-        "&:hover": {
-            backgroundColor: "#162d33",
-        },
-    }}
->
-    {isReuploading ? (
-        reuploadComplete ? (
-            <CheckCircleIcon sx={{ color: "#fff", fontSize: "24px" }} />
-        ) : (
-            <CircularProgress size={24} sx={{ color: "#fff" }} />
-        )
-    ) : (
-        <>
-            <CloudUploadIcon sx={{ color: "#fff", fontSize: "20px" }} />
-            Re-upload Selfie
-        </>
-    )}
-    <input type="file" accept="image/*" hidden onChange={handleReuploadClick} />
-</Button>
+                {/* Reupload Selfie Button (Opens Camera Directly) */}
+                <Button
+                    variant="contained"
+                    component="label"
+                    sx={{
+                        fontWeight: 700,
+                        backgroundColor: "#20424D",
+                        color: "#fff",
+                        borderRadius: "10px",
+                        padding: "10px 20px",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                        "&:hover": {
+                            backgroundColor: "#162d33",
+                        },
+                    }}
+                >
+                    {isReuploading ? (
+                        reuploadComplete ? (
+                            <CheckCircleIcon sx={{ color: "#fff", fontSize: "24px" }} />
+                        ) : (
+                            <CircularProgress size={24} sx={{ color: "#fff" }} />
+                        )
+                    ) : (
+                        <>
+                            <CloudUploadIcon sx={{ color: "#fff", fontSize: "20px" }} />
+                            Re-upload Selfie
+                        </>
+                    )}
+                    <input type="file" accept="image/*" hidden capture="user" onChange={handleReuploadClick} />
+                </Button>
             </Box>
 
             {/* Side Drawer */}

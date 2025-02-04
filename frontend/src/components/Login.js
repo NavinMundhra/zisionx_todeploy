@@ -3,7 +3,8 @@ import { TextField, Button, Typography, Box } from "@mui/material";
 
 const Login = ({ onOTPSent }) => {
     const [phoneNumber, setPhoneNumber] = useState("");
-    const [eventCode, setEventCode] = useState("");
+    // const [eventCode, setEventCode] = useState(""); // Use this in case of custom event code
+    const eventCode = "919051657004"; // Fixed event code
     const [selfie, setSelfie] = useState(null);
     const [selfieUploaded, setSelfieUploaded] = useState(false);
 
@@ -16,14 +17,20 @@ const Login = ({ onOTPSent }) => {
     };
 
     const handleSendOTP = async () => {
-        if (!phoneNumber || !eventCode || !selfie) {
-            alert("Please fill in all details and upload a selfie.");
+        // Validate phone number (must be 10 digits)
+        if (!/^\d{10}$/.test(phoneNumber)) {
+            alert("Please enter a valid 10-digit phone number.");
+            return;
+        }
+
+        if (!selfie) {
+            alert("Please upload a selfie.");
             return;
         }
 
         try {
             alert("Your OTP is 0000. Please enter it on the next screen.");
-            onOTPSent({ phoneNumber, eventCode, selfie }); // Move to OTP Verification
+            onOTPSent({ phoneNumber, eventCode, selfie }); // Proceed with fixed event code
         } catch (error) {
             console.error("Failed to send OTP:", error);
             alert("Error sending OTP. Please try again.");
@@ -85,7 +92,10 @@ const Login = ({ onOTPSent }) => {
             <TextField
                 variant="outlined"
                 fullWidth
-                placeholder="Phone number"
+                placeholder="Enter 10-digit phone number"
+                type = "number"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 sx={{
                     marginBottom: 2, // Spacing below the input box
                     backgroundColor: "#fff", // White background
@@ -103,7 +113,7 @@ const Login = ({ onOTPSent }) => {
                     zIndex: 1, // Ensure it appears above the video
                 }}
                 value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
+                onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, "").slice(0, 10))} // Allow only numbers, max length 10
             />
 
             {/* Event Code Input Box */}

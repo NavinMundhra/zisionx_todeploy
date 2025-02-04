@@ -126,7 +126,9 @@ const OTPVerification = ({ phoneNumber, selfie, onVerify }) => {
                     <input
                         key={index}
                         ref={(el) => (inputRefs.current[index] = el)} // Assign ref for each input
-                        type="text"
+                        type="number" // Enforce numeric input
+                        inputMode="numeric" // Display numeric keypad
+                        pattern="[0-9]*" // Restrict to only numbers
                         maxLength="1"
                         value={digit}
                         onChange={(e) => handleInputChange(e.target.value, index)}
@@ -140,6 +142,7 @@ const OTPVerification = ({ phoneNumber, selfie, onVerify }) => {
                             border: "1px solid black",
                             backgroundColor: "#fff",
                             outline: "none",
+                            MozAppearance: "textfield", // Fix for Firefox to remove increment arrows
                         }}
                     />
                 ))}
