@@ -10,7 +10,6 @@ import {
     ListItemText,
     IconButton,
     Button,
-    Checkbox,
     Dialog,
     DialogContent,
     DialogActions,
@@ -87,8 +86,6 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
     const toggleDrawer = (open) => () => {
         setDrawerOpen(open);
     };
-
-
 
     const handleImageClick = (index) => {
         setCurrentImage(images[index]);
@@ -173,8 +170,10 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
             <Box
                 sx={{
                     width: "100%",
+                    display: "flex",
                     textAlign: "center",
                     backgroundColor: "#F4F4F4",
+                    justifyContent: "space-between", // Ensures text on left and refresh icon on right
                     padding: "10px 0",
                     position: "sticky",
                     top: "80px",
@@ -389,7 +388,20 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
                     </Button>
 
                     {/* Print Button */}
-                    <Button variant="contained" sx={{ marginTop: 2, backgroundColor: "#20424D" }} onClick={handlePrintImage}>
+                    <Button
+                        variant="contained"
+                        sx={{
+                            marginTop: 1,
+                            backgroundColor: "#fff", // White background
+                            border: "2px solid #20424D", // Stroke color
+                            color: "#20424D", // Text color
+                            fontWeight: 600,
+                            "&:hover": {
+                                backgroundColor: "#f0f0f0", // Light gray on hover
+                            },
+                        }}
+                        onClick={handlePrintImage}
+                    >
                         Get it Printed
                     </Button>
                 </DialogContent>
