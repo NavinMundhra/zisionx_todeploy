@@ -1,93 +1,116 @@
-import React, { useState } from "react";
-import { ThemeProvider } from "@mui/material/styles"; // Import ThemeProvider
-import CssBaseline from "@mui/material/CssBaseline"; // Normalize styles across browsers
-import theme from "./components/theme"; // Import the custom theme
-import Login from "./components/Login"; // Login screen
-import OTPVerification from "./components/OTPVerification"; // OTP verification screen
-import Home from "./components/Home"; // Home screen
-import { searchImage, uploadImage } from "./services/api"; // Import the API functions
+import React, { useState, useEffect } from "react";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import theme from "./components/theme";
+import Login from "./components/Login";
+import OTPVerification from "./components/OTPVerification";
+import Home from "./components/Home";
+import { searchImage, uploadImage } from "./services/api";
+import ReactGA from "react-ga4";
+
+// 🔹 Replace with your Google Analytics 4 Measurement ID
+const GA_MEASUREMENT_ID = "G-XXXXXXXXXX";
+ReactGA.initialize(GA_MEASUREMENT_ID);
 
 function App() {
-    const [currentScreen, setCurrentScreen] = useState("login"); // Manage current screen
-    const [userDetails, setUserDetails] = useState(null); // Store user details (phone, selfie, etc.)
-    const [images, setImages] = useState([]); // Store matched images
-    const [selfie, setSelfie] = useState(null); 
+    const [currentScreen, setCurrentScreen] = useState("login"); 
+    const [userDetails, setUserDetails] = useState(null);
+    const [images, setImages] = useState([]);
+    const [selfie, setSelfie] = useState(null);
 
-    // Handler for when OTP is sent
+    // Function to send screen views to Google Analytics
+    const trackScreenView = (screenName) => {
+        ReactGA.send({
+            hitType: "pageview",
+            page: `/${screenName.toLowerCase().replace(" ", "-")}`, // e.g., "/login-screen"
+            title: screenName, // e.g., "Login Screen"
+        });
+        console.log(`📊 GA4 Tracking: ${screenName}`); // Debug log
+    };
+
+    // Track screen changes
+    useEffect(() => {
+        switch (currentScreen) {
+            case "login":
+                trackScreenView("Login Screen");
+                break;
+            case "otp":
+                trackScreenView("OTP Verification");
+                break;
+            case "home":
+                trackScreenView("Home Screen");
+                break;
+            default:
+                trackScreenView("Unknown Screen");
+        }
+    }, [currentScreen]); // Runs whenever `currentScreen` changes
+
+    // Handle OTP Sent
     const handleOTPSent = (details) => {
-        setUserDetails(details); // Save user details
-        setCurrentScreen("otp"); // Switch to OTP verification screen
+        setUserDetails(details);
+        setCurrentScreen("otp");
     };
 
-    // Handler for when OTP is verified
+    // Handle OTP Verified
     const handleOTPVerified = (matchedImages, uploadedSelfie) => {
-        setImages(matchedImages); // Save matched images
+        setImages(matchedImages);
         setSelfie(uploadedSelfie);
-        setCurrentScreen("home"); // Switch to Home screen
+        setCurrentScreen("home");
     };
 
-    // Handler for reuploading selfie
+    // Handle Reupload Selfie
     const handleReupload = async (file) => {
         try {
             const formData = new FormData();
             formData.append("file", file);
             console.log("Payload sent:", formData);
-            // Call the backend search API with the new selfie
+
             const response = await searchImage(file);
             const newImages = response.data.matches || [];
-            setImages(newImages); // Update images in state
+            setImages(newImages);
         } catch (error) {
             console.error("Error reuploading selfie:", error);
             alert("Failed to fetch images. Please try again.");
         }
     };
 
-    // Handler for uploading an image to the backend
+    // Handle Upload Image
     const handleUpload = async (file) => {
-      try {
-          // Create FormData to send the file to the backend
-          const formData = new FormData();
-          formData.append("file", file); // Append the file
-          formData.append("eventcode", userDetails.eventCode); // Append the phone number (eventCode)
-  
-          // Log the FormData content for debugging
-          for (let [key, value] of formData.entries()) {
-              console.log(`${key}:`, value); // Should log 'file' and 'phone_number'
-          }
-  
-          // Make the API call
-          const response = await uploadImage(formData);
-  
-          // Log the response for debugging
-          console.log("Upload response:", response);
-  
-          alert("Image uploaded successfully!");
-      } catch (error) {
-          console.error("Failed to upload image:", error);
-          alert("Failed to upload image. Please try again.");
-      }
-  };
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("eventcode", userDetails.eventCode);
+
+            console.log("Upload payload:", formData);
+            const response = await uploadImage(formData);
+            console.log("Upload response:", response);
+            alert("Image uploaded successfully!");
+        } catch (error) {
+            console.error("Failed to upload image:", error);
+            alert("Failed to upload image. Please try again.");
+        }
+    };
 
     return (
         <ThemeProvider theme={theme}>
-            <CssBaseline /> {/* Normalize and apply global styles */}
-            {/* Conditional Rendering of Screens */}
+            <CssBaseline />
+            {/* Render Screens Based on Current Screen */}
             {currentScreen === "login" && <Login onOTPSent={handleOTPSent} />}
             {currentScreen === "otp" && userDetails && (
                 <OTPVerification
-                    phoneNumber={userDetails.phoneNumber} // Pass phone number to OTPVerification
-                    selfie={userDetails.selfie} // Pass uploaded selfie
-                    onVerify={handleOTPVerified} // Pass handler for OTP verification
+                    phoneNumber={userDetails.phoneNumber}
+                    selfie={userDetails.selfie}
+                    onVerify={handleOTPVerified}
                 />
             )}
             {currentScreen === "home" && (
                 <Home
-                    phoneNumber={userDetails.phoneNumber} // Pass phone number
+                    phoneNumber={userDetails.phoneNumber}
                     eventCode={userDetails.eventCode}
-                    initialImages={images} // Pass matched images
-                    selfie={selfie} // Pass selfie to Home.js
-                    onReupload={handleReupload} // Pass reupload handler
-                    onUpload={handleUpload} // Pass upload handler
+                    initialImages={images}
+                    selfie={selfie}
+                    onReupload={handleReupload}
+                    onUpload={handleUpload}
                 />
             )}
         </ThemeProvider>

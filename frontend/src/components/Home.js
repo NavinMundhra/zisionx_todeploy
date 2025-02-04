@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { trackButtonClick } from "../utils/analytics";
 import {
     Box,
     Typography,
@@ -420,7 +421,10 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
                     <Button
                         variant="contained"
                         sx={{ marginTop: 2, backgroundColor: "#20424D" }}
-                        onClick={handleDownloadImage}
+                        onClick={(event) => {
+                            trackButtonClick(event);  // Track event in Google Analytics
+                            handleDownloadImage();    // Execute existing functionality
+                        }}
                     >
                         <DownloadIcon /> Download
                     </Button>
@@ -438,7 +442,10 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
                                 backgroundColor: "#f0f0f0", // Light gray on hover
                             },
                         }}
-                        onClick={handlePrintImage}
+                        onClick={(event) => {
+                            trackButtonClick(event);  // Track event in Google Analytics
+                            handlePrintImage();       // Execute existing functionality
+                        }}
                     >
                         Get it Printed
                     </Button>
