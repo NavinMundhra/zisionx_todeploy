@@ -147,39 +147,6 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
                 position: "relative",
             }}
         >
-            {/* Top Action Bar */}
-            <Box
-                sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    width: "100%",
-                    padding: "10px 20px",
-                }}
-            >
-                {/* Refresh Icon */}
-                <IconButton onClick={handleRefresh} sx={{ color: "#20424D" }}>
-                    <RefreshIcon fontSize="large" />
-                </IconButton>
-
-                {/* Download Images Button */}
-                {selectedImages.length > 0 && (
-                    <Button
-                        variant="contained"
-                        sx={{
-                            fontWeight: 600,
-                            backgroundColor: "#20424D",
-                            color: "#fff",
-                            "&:hover": {
-                                backgroundColor: "#162d33",
-                            },
-                        }}
-                        onClick={handleDownloadSelected}
-                    >
-                        Download Selected
-                    </Button>
-                )}
-            </Box>
-
             {/* Hamburger Menu Icon */}
             <IconButton
                 sx={{
@@ -231,6 +198,39 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
                 >
                     Images of you
                 </Typography>
+            </Box>
+
+            {/* Top Action Bar */}
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    width: "100%",
+                    padding: "10px 20px",
+                }}
+            >
+                {/* Refresh Icon */}
+                <IconButton onClick={handleRefresh} sx={{ color: "#20424D" }}>
+                    <RefreshIcon fontSize="large" />
+                </IconButton>
+
+                {/* Download Images Button */}
+                {selectedImages.length > 0 && (
+                    <Button
+                        variant="contained"
+                        sx={{
+                            fontWeight: 600,
+                            backgroundColor: "#20424D",
+                            color: "#fff",
+                            "&:hover": {
+                                backgroundColor: "#162d33",
+                            },
+                        }}
+                        onClick={handleDownloadSelected}
+                    >
+                        Download Selected
+                    </Button>
+                )}
             </Box>
 
             {/* User Images */}
