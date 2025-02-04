@@ -146,9 +146,7 @@ def upload_image():
 
 @app.route('/api/search', methods=['POST'])
 def search_face():
-    """Search for a face, retrieve attributes from DynamoDB, and return a pre-signed URL for the matched image.
-    API Request: curl -X POST -F "file=@test-images/test.JPG" http://127.0.0.1:5000/search
-    """
+    """Search for a face, retrieve attributes from DynamoDB, and return a pre-signed URL for the matched image."""
     try:
         print("request: ", request)
         file = request.files['file']  # Get the uploaded file
@@ -188,6 +186,23 @@ def search_face():
                 attributes = dynamo_response["Item"]
                 s3_path = attributes["S3Path"]["S"]  # Retrieve the S3 path
 
+                # Extract face attributes
+                eyes_open = attributes["EyesOpen"]["BOOL"]
+                eyes_open_confidence = float(attributes["EyesOpenConfidence"]["N"])
+                emotions = json.loads(attributes["Emotions"]["S"])
+
+                # Check if the eyes are open with high confidence
+                if not eyes_open or eyes_open_confidence < 98:
+                    continue
+
+                # Check if the face has the desired emotions with confidence above 95%
+                valid_emotion = any(
+                    emotion["Type"] in ["CALM", "HAPPY", "SAD"] and emotion["Confidence"] >= 95
+                    for emotion in emotions
+                )
+                if not valid_emotion:
+                    continue
+
                 # Generate pre-signed URL for the matched image
                 presigned_url = S3.generate_presigned_url(
                     ClientMethod="get_object",
@@ -200,11 +215,9 @@ def search_face():
                     "similarity": similarity,
                     "image_name": external_image_id,
                     "presigned_url": presigned_url,  # Add pre-signed URL to response
-                    "eyes_open": attributes["EyesOpen"]["BOOL"],
-                    "eyes_open_confidence": float(attributes["EyesOpenConfidence"]["N"]),
-                    "smile": attributes["Smile"]["BOOL"],
-                    "smile_confidence": float(attributes["SmileConfidence"]["N"]),
-                    "emotions": json.loads(attributes["Emotions"]["S"]),
+                    "eyes_open": eyes_open,
+                    "eyes_open_confidence": eyes_open_confidence,
+                    "emotions": emotions,
                     "mouth_open": attributes["MouthOpen"]["BOOL"],
                     "mouth_open_confidence": float(attributes["MouthOpenConfidence"]["N"]),
                     "age_range": {
@@ -220,7 +233,7 @@ def search_face():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
+        
 # Dummy OTP (0000) for testing purposes
 OTP = "0000"
 
