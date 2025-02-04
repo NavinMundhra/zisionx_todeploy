@@ -12,8 +12,6 @@ const GA_MEASUREMENT_ID = "G-QSGSDM0N8M";
 ReactGA.initialize(GA_MEASUREMENT_ID);
 ReactGA.send("pageview"); // Send initial pageview
 
-injectGoogleAnalytics();
-
 
 injectContentsquareScript({
   siteId: "5291436",
