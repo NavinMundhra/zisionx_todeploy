@@ -116,7 +116,7 @@ const Login = ({ onOTPSent }) => {
                 onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, "").slice(0, 10))} // Allow only numbers, max length 10
             />
 
-            {/* Event Code Input Box */}
+            {/* Event Code Input Box
             <TextField
                 variant="outlined"
                 fullWidth
@@ -139,7 +139,7 @@ const Login = ({ onOTPSent }) => {
                 }}
                 value={eventCode}
                 onChange={(e) => setEventCode(e.target.value)}
-            />
+            /> */}
 
             {/* Upload Selfie Button */}
             <Button
