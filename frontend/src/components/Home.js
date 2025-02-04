@@ -87,20 +87,25 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
         }
     
         try {
-            setIsLoading(true); // Indicate loading state
+            setIsLoading(true); // Show loading state
     
-            // Re-trigger the search API with the initial selfie
+            // Call the search API again with the existing selfie
             const searchResponse = await searchImage(selfie);
             const matches = searchResponse.data.matches || [];
     
-            // Update images on the home page
-            setImages(matches);
+            // Avoid unnecessary re-renders
+            setImages((prevImages) => {
+                if (JSON.stringify(prevImages) === JSON.stringify(matches)) {
+                    return prevImages; // No need to update if images are the same
+                }
+                return matches;
+            });
         } catch (error) {
             console.error("Failed to refresh images:", error);
             alert("Failed to refresh images. Please try again.");
+        } finally {
+            setIsLoading(false); // Stop loading state
         }
-    
-        setIsLoading(false); // Stop loading state
     };
 
     const toggleDrawer = (open) => () => {
