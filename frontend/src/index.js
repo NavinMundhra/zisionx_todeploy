@@ -12,7 +12,7 @@ import clarity from "clarity-js"; // Correct import for Clarity
 const GA_MEASUREMENT_ID = "G-QSGSDM0N8M";  // Google Analytics 4 Measurement ID
 const HOTJAR_ID = 5291436;                // Hotjar Site ID (as a number, not a string)
 const HOTJAR_SV = 6;                       // Hotjar Script Version
-const CLARITY_ID = "q4k7n0x2l8";           // Microsoft Clarity Project ID
+// const CLARITY_ID = "q4k7n0x2l8";           // Microsoft Clarity Project ID
 
 // Initialize Google Analytics 4
 ReactGA.initialize(GA_MEASUREMENT_ID);
@@ -22,7 +22,7 @@ ReactGA.send("pageview"); // Send initial pageview
 hotjar.initialize(HOTJAR_ID, HOTJAR_SV);
 
 // Initialize Microsoft Clarity (Fixed)
-clarity.init({ projectId: CLARITY_ID });
+// clarity.init({ projectId: CLARITY_ID });
 
 // ✅ Inject Google Analytics manually as a fallback
 const injectGoogleAnalytics = () => {
