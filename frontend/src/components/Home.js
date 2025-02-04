@@ -20,6 +20,7 @@ import RefreshIcon from "@mui/icons-material/Refresh"; // Added refresh icon
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import DownloadIcon from "@mui/icons-material/Download";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -29,7 +30,6 @@ import axios from "axios";
 const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber, eventCode }) => {
     const [images, setImages] = useState([]);
     const [drawerOpen, setDrawerOpen] = useState(false);
-    const [selectedImages, setSelectedImages] = useState([]);
     const [currentImage, setCurrentImage] = useState(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isUploading, setIsUploading] = useState(false);
@@ -68,6 +68,17 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
         }
     };
 
+    const handleDownloadImage = () => {
+        if (currentImage) {
+            const link = document.createElement("a");
+            link.href = currentImage.presigned_url;
+            link.download = currentImage.image_name;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    };
+
     // Reset Images to Initial State
     const handleRefresh = () => {
         setImages(initialImages);
@@ -77,25 +88,7 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
         setDrawerOpen(open);
     };
 
-    const handleImageSelect = (image) => {
-        setSelectedImages((prev) =>
-            prev.includes(image)
-                ? prev.filter((img) => img !== image)
-                : [...prev, image]
-        );
-    };
 
-    const handleDownloadSelected = () => {
-        selectedImages.forEach((image) => {
-            const link = document.createElement("a");
-            link.href = image.presigned_url;
-            link.download = image.image_name;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        });
-        setSelectedImages([]);
-    };
 
     const handleImageClick = (index) => {
         setCurrentImage(images[index]);
