@@ -89,6 +89,8 @@ const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber,
         try {
             setIsLoading(true); // Show loading state
     
+            // Free memory: Remove old images
+            setImages([]);
             // Call the search API again with the existing selfie
             const searchResponse = await searchImage(selfie);
             const matches = searchResponse.data.matches || [];
