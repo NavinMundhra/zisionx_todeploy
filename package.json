@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "clarity-js": "^0.7.66",
+    "react-ga4": "^2.1.0",
+    "react-hotjar": "^6.3.1"
+  }
+}
