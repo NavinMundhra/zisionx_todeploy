@@ -24,9 +24,10 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { searchImage } from "../services/api";
 import axios from "axios";
 
-const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber, eventCode }) => {
+const Home = ({ initialImages = [], onUpload, onReupload, onLogout, phoneNumber, eventCode, selfie }) => {
     const [images, setImages] = useState([]);
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [currentImage, setCurrentImage] = useState(null);
