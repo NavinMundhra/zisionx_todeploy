@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 
 import ReactGA from "react-ga4";
 import { hotjar } from "react-hotjar";
-import clarity from "clarity-js";
+import * as clarity from "clarity-js"; 
 
 // 🔹 Replace with your actual IDs
 const GA_MEASUREMENT_ID = "G-QSGSDM0N8M";  // Google Analytics 4 Measurement ID
