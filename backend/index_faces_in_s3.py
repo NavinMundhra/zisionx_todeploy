@@ -20,7 +20,6 @@ rekognition = boto3.client("rekognition", region_name=AWS_REGION)
 dynamodb = boto3.client("dynamodb", region_name=AWS_REGION)
 
 
-
 def store_face_attributes_in_dynamodb(face_id, external_image_id, face_detail, s3_path):
     """
     Store face attributes in DynamoDB.

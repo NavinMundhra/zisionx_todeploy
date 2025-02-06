@@ -37,7 +37,7 @@ injectContentsquareScript({
 
 
 
-// Function to handle PWA install prompt
+// Handle PWA Install Prompt
 const handlePWAInstall = () => {
   let deferredPrompt;
 
@@ -45,7 +45,7 @@ const handlePWAInstall = () => {
     event.preventDefault(); // Prevent automatic prompt
     deferredPrompt = event;
 
-    // Show a floating "Install App" button
+    // Show the "Install" button
     const installButton = document.createElement("button");
     installButton.innerText = "Install ZisionX App";
     installButton.style.position = "fixed";
@@ -84,10 +84,10 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/service-worker.js')
       .then((registration) => {
-        console.log('ServiceWorker registered:', registration);
+        console.log('Service Worker registered:', registration);
       })
       .catch((error) => {
-        console.log('ServiceWorker registration failed:', error);
+        console.log('Service Worker registration failed:', error);
       });
   });
 }

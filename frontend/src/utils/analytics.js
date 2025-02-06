@@ -1,6 +1,9 @@
 import ReactGA from "react-ga4";
 
 export const trackButtonClick = (event) => {
+//   Prevent the event from propagating further if not needed
+//   event.stopPropagation();
+
   const buttonText = event.target.innerText || "Unnamed Button";
 
   ReactGA.event("button_click", {
