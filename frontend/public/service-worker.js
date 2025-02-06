@@ -3,8 +3,8 @@ const urlsToCache = [
   "/",
   "/index.html",
   "/manifest.json",
-  "/ZX_logo_192.jpeg",
-  "/ZX_logo_512.jpeg"
+  "/logo192.png",
+  "/logo512.png"
 ];
 
 // Install Service Worker
