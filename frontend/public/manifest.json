@@ -4,22 +4,36 @@
   "icons": [
     {
       "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
+      "sizes": "64x64",
       "type": "image/x-icon"
     },
     {
-      "src": "ZX_logo_192.png",
+      "src": "logo192.png",
       "type": "image/png",
       "sizes": "192x192",
       "purpose": "any"
     },
     {
-      "src": "ZX_logo_512.png",
+      "src": "logo512.png",
       "type": "image/png",
       "sizes": "512x512",
       "purpose": "any"
     }
   ],
+  "screenshots": [
+  {
+    "src": "/screenshots/desktop.png",
+    "type": "image/png",
+    "sizes": "1280x720",
+    "form_factor": "wide"
+  },
+  {
+    "src": "/screenshots/mobile.png",
+    "type": "image/png",
+    "sizes": "1080x1920",
+    "form_factor": "narrow"
+  }
+],
   "start_url": "/",
   "display": "standalone",
   "scope": "/",
