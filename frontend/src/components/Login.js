@@ -8,6 +8,17 @@ const Login = ({ onOTPSent }) => {
     const [selfie, setSelfie] = useState(null);
     const [selfieUploaded, setSelfieUploaded] = useState(false);
 
+    // // Extract event code from URL
+    // useEffect(() => {
+    //     const queryParams = new URLSearchParams(location.search);
+    //     const code = queryParams.get("eventcode");
+    //     if (code) {
+    //         setEventCode(code);
+    //     } else {
+    //         setInvalidEventCode(true);
+    //     }
+    // }, [location]);
+
     const handleSelfieChange = (e) => {
         const file = e.target.files[0];
         if (file) {

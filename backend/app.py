@@ -159,8 +159,8 @@ def search_face():
             search_response = REKOGNITION.search_faces_by_image(
                 CollectionId=COLLECTION_ID,
                 Image={"Bytes": image_file.read()},
-                MaxFaces=50,
-                FaceMatchThreshold=95
+                MaxFaces=100,
+                FaceMatchThreshold=90
             )
 
         if not search_response.get("FaceMatches"):
@@ -197,7 +197,7 @@ def search_face():
 
                 # Check if the face has the desired emotions with confidence above 95%
                 valid_emotion = any(
-                    emotion["Type"] in ["CALM", "HAPPY", "SAD"] and emotion["Confidence"] >= 95
+                    emotion["Type"] in ["CALM", "HAPPY", "SAD"] and emotion["Confidence"] >= 80
                     for emotion in emotions
                 )
                 if not valid_emotion:
